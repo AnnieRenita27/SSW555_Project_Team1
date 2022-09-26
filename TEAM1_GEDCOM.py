@@ -1,16 +1,36 @@
+
+'''
+SSW 555 Project:
+Team 1
+Team members :Annie Renita and Donjie Zou
+Public repository name on GitHub: SSW555_Project_Team1
+
+Program:
+This program calls the custom parse function to open to open the file via the 
+path provided, to make a list of individuals with unique Id and name of each 
+individual and a list of families with their indivial unique identifier, each 
+family member's name and individual's unique identifier. Assuming the range for 
+individuals will be less than 5000 and for families will be less than 1000.
+
+'''
+
+#Function for file length
 def file_len(f):
     for i,l in enumerate(f):
         pass
     return i+1
 
+# Function to create a list for indivials
 def indi_list():
-    return [0 for i in range(7)]
+    return [0 for i in range(4999)]
 
+#Function to create a list for families
 def fam_list():
-    oplist = [0 for i in range(6)]
+    oplist = [0 for i in range(999)]
     oplist[5] = []
     return oplist
 
+#Function to get the last name
 def getLastName(str):
     temp=''
     for i in str:
@@ -18,11 +38,13 @@ def getLastName(str):
             temp += i
     return temp
 
+#Function to get name by ID in list of individual
 def getNameByID(indi_list, id):
     for i in indi_list:
         if(i[0] == id):
             return i[1]
 
+#Function for parsing through the file and entering values in list_indi, list_fam
 def parse(file_name):
     f = open(file_name,'r')
     f_len = file_len(open(file_name))
@@ -89,11 +111,19 @@ def parse(file_name):
                         fam[4] = date
     return list_indi, list_fam
 
-list_indi, list_fam = parse('C://Users//62717//Desktop//ssw 533//ssw555//clone//project1//dongjezou.ged')
+#Main 
+list_indi, list_fam = parse('C://Users//15513//Documents//Stevens Institute of Technology//Sem 3//SSW 555 Web Campus//Project//Project Assignment 3//GEDCOM_data.ged')
 list_indi.sort()
 list_fam.sort()
 
+#Printing individual's unique identifer and name of that individual
 for i in list_indi:
-    print("ID: " + i[0] + "\nName: " + i[1] + "\n")
+    print("Individual unique ID is: " + i[0] + "\nName: " + i[1] + "\n")
+    
+#Printing family's unique identifier, family member's names with their individual unique IDs
 for i in list_fam:
-    print("ID: "+i[0]+"\nHusband's Name: "+getNameByID(list_indi,i[1])+"\nWife's Name: "+getNameByID(list_indi,i[2])+"\n")
+    print("Family's unique ID: "+i[0]+
+          "\nHusband's Name: "+getNameByID(list_indi,i[1])+", Individual unique ID:",i[1]+
+          "\nWife's Name: "+getNameByID(list_indi,i[2])+", Individual unique ID:",i[2]+"\n")
+    
+#End
