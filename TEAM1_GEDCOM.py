@@ -13,6 +13,22 @@ family member's name and individual's unique identifier. Assuming the range for
 individuals will be less than 5000 and for families will be less than 1000.
 
 '''
+from tabulate import tabulate
+from datetime import date,datetime
+import time
+
+#Calculate Age 
+def age(birthdate,deathdate):
+    birth_date_obj = datetime.strptime(birthdate, '%Y %b %d')
+    if(deathdate==0):
+        today = date.today()
+        age = today.year - birth_date_obj.year - ((today.month, today.day) < (birth_date_obj.month, birth_date_obj.day))
+    if(deathdate != 0):
+        death_date_obj = datetime.strptime(deathdate, '%Y %b %d')
+        age = death_date_obj.year - birth_date_obj.year - ((death_date_obj.month, death_date_obj.day) < (birth_date_obj.month, birth_date_obj.day))
+    #datetime.strptime(birthdate, format)
+
+    return age
 
 #Function for file length
 def file_len(f):
@@ -109,6 +125,8 @@ def parse(file_name):
                         fam[3] = date
                     if(date_id == 'DIV'):
                         fam[4] = date
+                    if(indi[3] != 0):
+                        indi[5] = age(indi[3],indi[4])
     return list_indi, list_fam
 
 #Main 
@@ -116,14 +134,19 @@ list_indi, list_fam = parse('C://Users//15513//Documents//Stevens Institute of T
 list_indi.sort()
 list_fam.sort()
 
+myData=[]
+#Table header
+head = ["individual Unique ID", "Name","Gender","Birthday","Age"]
 #Printing individual's unique identifer and name of that individual
 for i in list_indi:
     print("Individual unique ID is: " + i[0] + "\nName: " + i[1] + "\n")
+    myData.append([i[0],i[1],i[2],i[3]])
     
 #Printing family's unique identifier, family member's names with their individual unique IDs
 for i in list_fam:
     print("Family's unique ID: "+i[0]+
           "\nHusband's Name: "+getNameByID(list_indi,i[1])+", Individual unique ID:",i[1]+
           "\nWife's Name: "+getNameByID(list_indi,i[2])+", Individual unique ID:",i[2]+"\n")
-    
+ # display table
+print(tabulate(myData, headers=head, tablefmt="grid"))
 #End
