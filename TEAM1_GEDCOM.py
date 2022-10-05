@@ -1,8 +1,8 @@
-
+import unittest
 '''
 SSW 555 Project:
 Team 1
-Team members :Annie Renita and Donjie Zou
+Team members :Annie Renita, Donjie Zou, and Jonathan Morrone
 Public repository name on GitHub: SSW555_Project_Team1
 
 Program:
@@ -29,6 +29,24 @@ def age(birthdate,deathdate):
     #datetime.strptime(birthdate, format)
 
     return age
+
+#Function for Listing Deascesed
+def death_list(ind_list):
+    dead_people = []
+    for i in ind_list:
+        if(len(i)>3):
+            if (i[4] != 0):
+                dead_people = dead_people+ [i[1]]
+    return dead_people
+
+#Funciton for Listing Living Married people
+def married_list(ind_list):
+    married = []
+    for i in ind_list:
+        if (i[4]==0 and i[6] != 0):
+            married = married + [i[1]]
+    return married
+        
 
 #Function for file length
 def file_len(f):
@@ -130,9 +148,12 @@ def parse(file_name):
     return list_indi, list_fam
 
 #Main 
-list_indi, list_fam = parse('C://Users//15513//Documents//Stevens Institute of Technology//Sem 3//SSW 555 Web Campus//Project//Project Assignment 3//GEDCOM_data.ged')
+list_indi, list_fam = parse('C://Users//Jonathan Morrone//Desktop//Stevens//SSW555_Project_Team1//GEDCOM_data.ged')
 list_indi.sort()
 list_fam.sort()
+list_death = death_list(list_indi)
+married = married_list(list_indi)
+
 
 myData=[]
 #Table header
@@ -150,3 +171,4 @@ for i in list_fam:
  # display table
 print(tabulate(myData, headers=head, tablefmt="grid"))
 #End
+
