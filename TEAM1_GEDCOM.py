@@ -1,53 +1,15 @@
-import unittest
+
 '''
 SSW 555 Project:
 Team 1
-Team members :Annie Renita, Donjie Zou, and Jonathan Morrone
+Team members :Annie Renita, Donjie Zou, Johnathan Morrone and Tirth Patel
 Public repository name on GitHub: SSW555_Project_Team1
-
-Program:
-This program calls the custom parse function to open to open the file via the 
-path provided, to make a list of individuals with unique Id and name of each 
-individual and a list of families with their indivial unique identifier, each 
-family member's name and individual's unique identifier. Assuming the range for 
-individuals will be less than 5000 and for families will be less than 1000.
 
 '''
 from tabulate import tabulate
 from datetime import date,datetime
 import time
-
-#Calculate Age 
-def age(birthdate,deathdate):
-    birth_date_obj = datetime.strptime(birthdate, '%Y %b %d')
-    if(deathdate==0):
-        today = date.today()
-        age = today.year - birth_date_obj.year - ((today.month, today.day) < (birth_date_obj.month, birth_date_obj.day))
-    if(deathdate != 0):
-        death_date_obj = datetime.strptime(deathdate, '%Y %b %d')
-        age = death_date_obj.year - birth_date_obj.year - ((death_date_obj.month, death_date_obj.day) < (birth_date_obj.month, birth_date_obj.day))
-    #datetime.strptime(birthdate, format)
-
-    return age
-
-#Function for Listing Deascesed
-def death_list(ind_list):
-    dead_people = []
-    for i in ind_list:
-        if(len(i)>3):
-            if (i[4] != 0):
-                dead_people = dead_people+ [i[1]]
-    return dead_people
-
-#Funciton for Listing Living Married people
-def married_list(ind_list):
-    married = []
-    for i in ind_list:
-        if (i[4]==0 and i[6] != 0):
-            married = married + [i[1]]
-    return married
-        
-
+import us01,us02
 #Function for file length
 def file_len(f):
     for i,l in enumerate(f):
@@ -78,7 +40,53 @@ def getNameByID(indi_list, id):
         if(i[0] == id):
             return i[1]
 
-#Function for parsing through the file and entering values in list_indi, list_fam
+#Function for Listing Deascesed
+def death_list(ind_list):
+    dead_people = []
+    for i in ind_list:
+        if(len(i)>3):
+            if (i[4] != 0):
+                dead_people = dead_people+ [i[1]]
+    return dead_people
+
+#Funciton for Listing Living Married people
+def married_list(ind_list):
+    married = []
+    for i in ind_list:
+        if (i[4]==0 and i[6] != 0):
+            married = married + [i[1]]
+    return married
+
+#Calculate Age 
+def age(birthdate,deathdate):
+    birth_date_obj = datetime.strptime(birthdate, '%Y %b %d')
+    if(deathdate==0):
+        today = date.today()
+        age = today.year - birth_date_obj.year - ((today.month, today.day) < (birth_date_obj.month, birth_date_obj.day))
+    if(deathdate != 0):
+        death_date_obj = datetime.strptime(deathdate, '%Y %b %d')
+        age = death_date_obj.year - birth_date_obj.year - ((death_date_obj.month, death_date_obj.day) < (birth_date_obj.month, birth_date_obj.day))
+    #datetime.strptime(birthdate, format)
+    return age
+
+def find_duplicate_marriages(list_fam):
+    unique_marriages = []
+    duplicate_marriages = []
+    temp  = [list_fam]
+    for i in list_fam:
+        for j in temp[0:]:
+            if ((i[1] == j[1]) and (i[2] == j[2])) :
+                print(getNameByID(indi_list, i[1]),getNameByID(indi_list, i[1]), "their marriage record is more than 1.")
+                duplicate_marriages.append(i)
+            elif(i[3] == j[3]):
+                print(getNameByID(indi_list, i[1]),getNameByID(indi_list, i[1]), "their marriage record is more than 1.")
+                duplicate_marriages.append(i)
+            else:
+                unique_marriages.append(i)       
+    return duplicate_marriages
+            
+    
+#Function for storing data in list_indi, list_fam
 def parse(file_name):
     f = open(file_name,'r')
     f_len = file_len(open(file_name))
@@ -144,31 +152,38 @@ def parse(file_name):
                     if(date_id == 'DIV'):
                         fam[4] = date
                     if(indi[3] != 0):
-                        indi[5] = age(indi[3],indi[4])
+                        indi[7] = age(indi[3],indi[4])
     return list_indi, list_fam
 
-#Main 
-list_indi, list_fam = parse('C://Users//Jonathan Morrone//Desktop//Stevens//SSW555_Project_Team1//GEDCOM_data.ged')
+list_indi, list_fam = parse('C://Users//62717//Desktop//ssw 533//ssw555//clone//proj4//proj5//PythonApplication2//GEDCOM_data-1.ged')
 list_indi.sort()
 list_fam.sort()
+
 list_death = death_list(list_indi)
+
 married = married_list(list_indi)
 
+duplicate_marriage_record = find_duplicate_marriages(list_fam)
 
-myData=[]
+myData = [] 
 #Table header
-head = ["individual Unique ID", "Name","Gender","Birthday","Age"]
-#Printing individual's unique identifer and name of that individual
+head = ["Individual Unique ID", "Name","Gender","Birthday","Death Date","Age"]
+#Printing individual's details in a tabular format
 for i in list_indi:
-    print("Individual unique ID is: " + i[0] + "\nName: " + i[1] + "\n")
-    myData.append([i[0],i[1],i[2],i[3]])
+    myData.append([i[0],i[1],i[2],i[3],i[4],i[7]])
+    #print("Individual unique ID is: " + i[0] + "\nName: " + i[1] + "\n")
     
 #Printing family's unique identifier, family member's names with their individual unique IDs
 for i in list_fam:
-    print("Family's unique ID: "+i[0]+
-          "\nHusband's Name: "+getNameByID(list_indi,i[1])+", Individual unique ID:",i[1]+
-          "\nWife's Name: "+getNameByID(list_indi,i[2])+", Individual unique ID:",i[2]+"\n")
- # display table
-print(tabulate(myData, headers=head, tablefmt="grid"))
-#End
+    print("Family's unique ID: ", i[0],
+          "\nHusband's Name: " , getNameByID(list_indi,i[1])  , ", Individual unique ID:",i[1],
+          "\nWife's Name: ",getNameByID(list_indi,i[2]),", Individual unique ID:",i[2],"\n")
+    
+ 
 
+# display table
+ 
+print(tabulate(myData, headers=head, tablefmt="grid"))
+   
+   
+#End
