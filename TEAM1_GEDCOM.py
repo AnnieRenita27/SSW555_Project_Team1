@@ -46,6 +46,8 @@ def run_stories():
     table = []
     marriage_after_fourteen(table)  # US10
     sibling_age_space(table)  # US13
+    birth_before_parents_death(table)  # US09
+    list_deceased(table)  # US29
     
     return tabulate(table, headers, tablefmt="fancy_grid")
 
@@ -89,6 +91,11 @@ def read_file():
 def get_individual(ind_id):
     if ind_id != None:
         return individuals[int(ind_id[2:-1]) - 1]
+def get_husband_id(ind):
+    return families[int(ind.child_id[2:-1]) - 1].husband
+
+def get_wife_id(ind):
+    return families[int(ind.child_id[2:-1]) - 1].wife
 
 def print_individuals():
     headers = ["Id", "Name", "Sex", "Birthday", "Alive", "Death", "Child Id", "Spouse Id"]
@@ -102,9 +109,19 @@ def print_families():
     headers = ["Id", "Married", "Divorced", "Husband Id", "Husband Name", "Wife Id", "Wife Name", "Children Ids"]
     table = []
     for fam in families:
+        
+        
+        if fam.husband is not None:
+            husbandName=get_individual(fam.husband).name
+        else:
+            husbandName="NA"
+        if fam.wife is not None:
+            wifeName=get_individual(fam.wife).name
+        else:
+            wifeName="NA"
         table.append([fam.f_id, format_date(fam.marriage) if fam.marriage is not None else "NA",
                       format_date(fam.divorce) if fam.divorce is not None else "NA", fam.husband,
-                      get_individual(fam.husband), fam.wife, get_individual(fam.wife),
+                      husbandName, fam.wife, wifeName,
                       ", ".join(fam.children)])
     return tabulate(table, headers, tablefmt="fancy_grid")
 
@@ -244,6 +261,46 @@ def sibling_age_space(table):  # US13: Sibling Age Spacing
     table.append(
         ["US13", "Sibling Age Spacing", "\n".join(notes), sibling_space, result])
  
+def birth_before_parents_death(table):  # US09: Birth Before Death of Parents
+    valid_birth = True
+    notes = []
+    for ind in individuals:
+        if ind.child_id is None:
+            continue
+
+        husband = get_individual(get_husband_id(ind))  # get husband
+        wife = get_individual(get_wife_id(ind))  # get wife
+        if wife is not None:
+            if husband.death is None and wife.death is None:  # if husband and wife are alive
+                continue
+            elif husband.death is not None and wife.death is not None:  # if husband and wife are both dead
+                if ind.birth < husband.death and ind.birth < wife.death:
+                    continue
+                else:
+                    valid_birth = False
+                    notes.append("{} was born after death of parent(s).".format(ind.name))
+            elif husband.death is not None and ind.birth < husband.death:  # if husband is dead
+                continue
+            elif wife.death is not None and ind.birth < wife.death:  # if wife is dead
+                continue
+            else:
+                valid_birth = False
+                notes.append("{} was born after death of parent(s).".format(ind.name))
+
+    if valid_birth:
+        result = "All birth dates were before parents' deaths."
+    else:
+        result = "One or more birth dates were incorrect."
+
+    table.append(
+        ["US09", "Birth Before Death of Parents", "\n".join(notes), valid_birth, result])
+
+def list_deceased(table):  # US29: List Deceased
+    results = "\n".join([ind.name for ind in individuals if ind.death is not None])
+
+    table.append(
+    ["US29", "List Deceased", "", True, results])
+
 #Function for parsing through the file and entering values in list_indi, list_fam
 def parse(file_name):
     f = open(file_name,'r')
