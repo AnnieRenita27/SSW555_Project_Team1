@@ -19,7 +19,7 @@ import time
 
 families = []
 individuals = []
-FILE_NAME = "Final_GEDCOM_data.ged"
+FILE_NAME = "GEDCOM_data.ged"
 
 class Individual:
     def __init__(self, i_id):
@@ -83,7 +83,7 @@ def process_individual(lines, index, new_individual):
         details = lines[index].split(" ", 2)
     individuals.append(new_individual)
 def read_file():
-    with open('C://Users//parag//Downloads//Team1 - Project Assignment 3//Assignment-3//SSW555_Project_Team1//Final_GEDCOM_data.ged') as file:
+    with open('C://Users//62717//Desktop//ssw 533//ssw555//clone//proj4//proj5//PythonApplication2//GEDCOM_data-1.ged') as file:
         lines = file.readlines()
     file.close()
     return lines
@@ -371,7 +371,7 @@ def parse(file_name):
     return list_indi, list_fam
 
 #Main 
-list_indi, list_fam = parse('C://Users//parag//Downloads//Team1 - Project Assignment 3//Assignment-3//SSW555_Project_Team1//Final_GEDCOM_data.ged')
+list_indi, list_fam = parse('C://Users//62717//Desktop//ssw 533//ssw555//clone//proj4//proj5//PythonApplication2//GEDCOM_data.ged')
 list_indi.sort()
 list_fam.sort()
 

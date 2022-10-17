@@ -1,100 +1,336 @@
- 
 0 NOTE GitHub Public Repository name : SSW555_Project_Team1
-0 NOTE Generation of an imaginary Family Tree
-
-0 I02 INDI
-1 NAME Oliver /Baker/
+0 HEAD
+1 SOUR Family Echo
+2 WWW http://www.familyecho.com/
+1 FILE My Family
+1 DATE 4 OCT 2022
+1 DEST ANSTFILE
+1 GEDC
+2 VERS 5.5.1
+2 FORM LINEAGE-LINKED
+1 SUBM @I1@
+2 NAME annierenita27@gmail.com
+1 SUBN
+1 CHAR UTF-8
+0 @I1@ INDI
+1 NAME Anne /Hawkins/
+2 GIVN Anne
+2 SURN Hawkins
+2 _MARNM Hawkins
+1 SEX F
+1 BIRT
+2 DATE 27 MAR 1998
+1 FAMC @F1@
+0 @I2@ INDI
+1 NAME Stanley /Hawkins/
+2 GIVN Stanley
+2 SURN Hawkins
+2 _MARNM Hawkins
 1 SEX M
 1 BIRT
-2 DATE 5 JUL 1935
-1 DEAT
-2 DATE 28 AUG 2013
-1 FAMS F01
-0 NOTE end of individual
-
-0 I01 INDI
-1 NAME Theobald /Kitty/
+2 DATE 29 DEC 1969
+1 FAMS @F1@
+1 FAMC @F2@
+0 @I3@ INDI
+1 NAME Mary /Fernandes/
+2 GIVN Mary
+2 SURN Fernandes
+2 _MARNM Hawkins
 1 SEX F
 1 BIRT
-2 DATE 27 DEC 1937
-1 FAMS F01
-0 NOTE end of individual
-
-0 I05 INDI
-1 NAME Evan /Baker/
-1 SEX F
-1 BIRT
-2 DATE 27 NOV 1968
-1 FAMC F01
-0 NOTE end of individual
-
-0 I03 INDI
-1 NAME Henry /Baker/
+2 DATE 25 JAN 1972
+1 FAMS @F1@
+1 FAMC @F3@
+0 @I4@ INDI
+1 NAME Trent /Fernandes/
+2 GIVN Trent
+2 SURN Fernandes
+2 _MARNM Fernandes
 1 SEX M
 1 BIRT
-2 DATE 13 APR 1960
-1 FAMC F01
-1 FAMS F02
-1 FAMS F03
-0 NOTE end of individual
-
-0 I04 INDI
-1 NAME Sohpie /Bloomfield/
+2 DATE 11 AUG 1933
+1 DEAT Y
+2 DATE 11 FEB 2010
+1 FAMS @F3@
+0 @I5@ INDI
+1 NAME Elsy /Dsouza/
+2 GIVN Elsy
+2 SURN Dsouza
+2 _MARNM Fernandes
 1 SEX F
 1 BIRT
-2 DATE 26 JUN 1960
-1 DEAT
-2 DATE 11 SEP 2001
-1 FAMS F02
-0 NOTE end of individual
-
-0 I08 INDI
-1 NAME Ashley /Craigie/
+2 DATE 5 MAY 1938
+1 DEAT Y
+2 DATE 30 JAN 2017
+1 FAMS @F3@
+0 @I6@ INDI
+1 NAME Mable /Fernandes/
+2 GIVN Mable
+2 SURN Fernandes
+2 _MARNM Jenson
 1 SEX F
 1 BIRT
-2 DATE 2 FEB 1961
-1 FAMS F03
-0 NOTE end of individual
-
-0 I06 INDI
-1 NAME David /Craigier/
+2 DATE 10 OCT 1971
+1 FAMS @F4@
+1 FAMS @F5@
+1 FAMC @F3@
+0 @I7@ INDI
+1 NAME Alice /Hawkins/
+2 GIVN Alice
+2 SURN Hawkins
+2 _MARNM Hawkins
+1 SEX F
+1 BIRT
+2 DATE 2 SEP 2003
+1 FAMC @F1@
+0 @I8@ INDI
+1 NAME Margrette /Fernandes/
+2 GIVN Margrette
+2 NPFX Mrs.
+2 SURN Fernandes
+2 _MARNM Brians
+1 SEX F
+1 BIRT
+2 DATE 16 AUG 1978
+1 FAMS @F6@
+1 FAMC @F3@
+0 @I9@ INDI
+1 NAME George /Hawkins/
+2 GIVN George
+2 SURN Hawkins
+2 _MARNM Hawkins
 1 SEX M
 1 BIRT
-2 DATE 19 SEP 1993
-1 FAMC F02
-0 NOTE end of individual
-
-0 I07 INDI
-1 NAME Alexis /Cronin/
+2 DATE 20 AUG 1932
+1 FAMS @F2@
+1 FAMC @F7@
+0 @I10@ INDI
+1 NAME Josephine /Stifford/
+2 GIVN Josephine
+2 SURN Stifford
+2 _MARNM Hawkins
 1 SEX F
 1 BIRT
-2 DATE 21 MAY 2004
-1 FAMC F03
-0 NOTE end of individual
-
-0 F03 FAM
+2 DATE 27 JUL 1935
+1 FAMS @F2@
+0 @I11@ INDI
+1 NAME Josephine /Hawkins/
+2 GIVN Josephine
+2 SURN Hawkins
+2 _MARNM Courtney
+1 SEX F
+1 BIRT
+2 DATE 10 OCT 1967
+1 FAMS @F8@
+1 FAMC @F2@
+0 @I12@ INDI
+1 NAME Richard /Courtney/
+2 GIVN Richard
+2 SURN Courtney
+2 _MARNM Courtney
+1 SEX M
+1 BIRT
+2 DATE 14 FEB 1957
+1 FAMS @F8@
+0 @I13@ INDI
+1 NAME Viviana /Courtney/
+2 GIVN Viviana
+2 SURN Courtney
+2 _MARNM Mathews
+1 SEX F
+1 BIRT
+2 DATE 8 MAR 1989
+1 FAMS @F9@
+1 FAMC @F8@
+0 @I14@ INDI
+1 NAME Sabrina /Courtney/
+2 GIVN Sabrina
+2 SURN Courtney
+2 _MARNM Roy
+1 SEX F
+1 BIRT
+2 DATE 13 APR 1991
+1 FAMS @F10@
+1 FAMC @F8@
+0 @I15@ INDI
+1 NAME Jedan /Mathews/
+2 GIVN Jedan
+2 NPFX Mr.
+2 SURN Mathews
+2 _MARNM Mathews
+1 SEX M
+1 BIRT
+2 DATE 7 MAY 1986
+1 FAMS @F9@
+0 @I16@ INDI
+1 NAME Sahil /Roy/
+2 GIVN Sahil
+2 SURN Roy
+2 _MARNM Roy
+1 SEX M
+1 BIRT
+2 DATE 6 FEB 1990
+1 FAMS @F10@
+0 @I17@ INDI
+1 NAME Travis /Jenson/
+2 GIVN Travis
+2 SURN Jenson
+2 _MARNM Jenson
+1 SEX M
+1 BIRT
+2 DATE 7 JUL 1965
+1 DEAT Y
+2 DATE 4 MAR 2010
+1 FAMS @F5@
+0 @I18@ INDI
+1 NAME Cassy /Jenson/
+2 GIVN Cassy
+2 SURN Jenson
+2 _MARNM Jenson
+1 SEX F
+1 BIRT
+2 DATE 1 NOV 1997
+1 FAMC @F5@
+0 @I19@ INDI
+1 NAME Jason /Jenson/
+2 GIVN Jason
+2 SURN Jenson
+2 _MARNM Jenson
+1 SEX M
+1 BIRT
+2 DATE 3 APR 1996
+1 FAMC @F5@
+0 @I20@ INDI
+1 NAME Nick /Brians/
+2 GIVN Nick
+2 SURN Brians
+2 _MARNM Brians
+1 SEX M
+1 BIRT
+2 DATE 20 NOV 1977
+1 FAMS @F6@
+0 @I21@ INDI
+1 NAME Rihana /Brians/
+2 GIVN Rihana
+2 NPFX Ms.
+2 SURN Brians
+2 _MARNM Brians
+1 SEX F
+1 BIRT
+2 DATE 18 FEB 2006
+1 FAMC @F6@
+0 @I22@ INDI
+1 NAME Ron /Brians/
+2 GIVN Ron
+2 NPFX Mr.
+2 SURN Brians
+2 _MARNM Brians
+1 SEX M
+1 BIRT
+2 DATE 2 NOV 2010
+1 FAMC @F6@
+0 @I23@ INDI
+1 NAME Harry /Stones/
+2 GIVN Harry
+2 SURN Stones
+2 _MARNM Stones
+1 SEX M
+1 BIRT
+2 DATE 1 SEP 1965
+1 FAMS @F4@
+1 FAMS @F11@
+0 @I24@ INDI
+1 NAME Shaun /Stones/
+2 GIVN Shaun
+2 SURN Stones
+2 _MARNM Stones
+1 SEX M
+1 BIRT
+2 DATE 5 AUG 2003
+1 FAMC @F11@
+0 @I25@ INDI
+1 NAME Shanon /Maguire/
+2 GIVN Shanon
+2 SURN Maguire
+2 _MARNM Maguire
+1 SEX F
+1 BIRT
+2 DATE 29 NOV 1973
+1 FAMS @F11@
+0 @F1@ FAM
+1 HUSB @I2@
+1 WIFE @I3@
+1 CHIL @I1@
+1 CHIL @I7@
 1 MARR
-2 DATE 21 DEC 1958
-1 HUSB I02
-1 WIFE I01
-1 CHIL I05
-1 CHIL I03
-0 NOTE end of family
-
-0 F01 FAM
+2 DATE 19 MAY 1996
+2 PLAC India
+1 _CURRENT Y
+1 _PRIMARY Y
+0 @F2@ FAM
+1 HUSB @I9@
+1 WIFE @I10@
+1 CHIL @I2@
+1 CHIL @I11@
+1 _CURRENT Y
+1 _PRIMARY Y
+0 @F3@ FAM
+1 HUSB @I4@
+1 WIFE @I5@
+1 CHIL @I3@
+1 CHIL @I6@
+1 CHIL @I8@
+1 _CURRENT Y
+1 _PRIMARY Y
+0 @F4@ FAM
+1 HUSB @I23@
+1 WIFE @I6@
+1 _CURRENT Y
+1 _PRIMARY Y
+0 @F11@ FAM
+1 HUSB @I23@
+1 WIFE @I25@
+1 CHIL @I24@
 1 MARR
-2 DATE 22 NOV 1989
-1 HUSB I03
-1 WIFE I04
-1 CHIL I06
-0 NOTE end of family
-
-0 F02 FAM
-1 MARR
-2 DATE 5 JAN 2003
-1 HUSB I03
-1 WIFE I08
-1 CHIL I07
-0 NOTE end of family
-
-0 NOTE end of the Family Tree
+2 DATE 8 JUN 1995
+2 PLAC US
+1 DIV
+2 DATE 6 OCT 2007
+1 _CURRENT N
+1 _PRIMARY N
+0 @F5@ FAM
+1 HUSB @I17@
+1 WIFE @I6@
+1 CHIL @I18@
+1 CHIL @I19@
+1 _CURRENT N
+1 _PRIMARY N
+0 @F6@ FAM
+1 HUSB @I20@
+1 WIFE @I8@
+1 CHIL @I21@
+1 CHIL @I22@
+1 _CURRENT Y
+1 _PRIMARY Y
+0 @F7@ FAM
+1 CHIL @I9@
+1 _CURRENT N
+1 _PRIMARY N
+0 @F8@ FAM
+1 HUSB @I12@
+1 WIFE @I11@
+1 CHIL @I13@
+1 CHIL @I14@
+1 _CURRENT Y
+1 _PRIMARY Y
+0 @F9@ FAM
+1 HUSB @I15@
+1 WIFE @I13@
+1 _CURRENT Y
+1 _PRIMARY Y
+0 @F10@ FAM
+1 HUSB @I16@
+1 WIFE @I14@
+1 _CURRENT Y
+1 _PRIMARY Y
+0 TRLR
