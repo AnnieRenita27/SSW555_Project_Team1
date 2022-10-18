@@ -1,7 +1,7 @@
 '''
 SSW 555 Project:
 Team 1
-Team members :Annie Renita and Donjie Zou
+Team members :Annie Renita, Donjie Zou, Johnathan Morrone and Tirth Patel
 Public repository name on GitHub: SSW555_Project_Team1
 
 '''
