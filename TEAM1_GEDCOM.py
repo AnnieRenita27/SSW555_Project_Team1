@@ -81,7 +81,7 @@ def process_individual(lines, index, new_individual):
 
 
 def read_file():
-    with open("GEDCOM_data.ged") as file:
+    with open("C://Users//15513//Documents//Stevens Institute of Technology//Sem 3//SSW 555 Web Campus//Project//Project Assignment 3//GEDCOM_data.ged") as file:
         lines = file.readlines()
     file.close()
     return lines
@@ -403,28 +403,30 @@ def parse(file_name):
                     date_id = 'MARR'
                 if str_array[1] == 'DIV':
                     date_id = 'DIV'
-                if(str[1] == 'FAMS'):
-                    indi[5] = str[2]
-                if(str[1] == 'FAMC'):
-                    indi[6] = str[2]
-                if(str[1] == 'HUSB'):
-                    fam[1] = str[2]
-                if(str[1] == 'WIFE'):
-                    fam[2] = str[2]
-                if(str[1] == 'CHIL'):
-                    fam[5].append(str[2])
-            if(str[0] == '2'):
-                if(str[1] == 'DATE'):
-                    date = str[4] + " " + str[3] + " " + str[2]
-                    if(date_id == 'BIRT'):
-                        indi[3] = date
-                    if(date_id == 'DEAT'):
-                        indi[4] = date
-                    if(date_id == 'MARR'):
-                        fam[3] = date
-                    if(date_id == 'DIV'):
-                        fam[4] = date
-    return list_indi, list_fam
+                if str_array[1] == 'FAMS':
+                    indi[5] = str_array[2]
+                if str_array[1] == 'FAMC':
+                    indi[6] = str_array[2]
+                if str_array[1] == 'HUSB':
+                    fam[1] = str_array[2]
+                if str_array[1] == 'WIFE':
+                    fam[2] = str_array[2]
+                if str_array[1] == 'CHIL':
+                    fam[5].append(str_array[2])
+            if str_array[0] == '2':
+                if str_array[1] == 'DATE':
+                    merged_date = str_array[4] + " " + str_array[3] + " " + str_array[2]
+                    if date_id == 'BIRT':
+                        indi[3] = merged_date
+                    if date_id == 'DEAT':
+                        indi[4] = merged_date
+                    if date_id == 'MARR':
+                        fam[3] = merged_date
+                    if date_id == 'DIV':
+                        fam[4] = merged_date
+                    if indi[3] != 0:
+                        indi[5] = age(indi[3], indi[4])
+    return list_individual, list_family
 
 #Main 
 list_indi, list_fam = parse('C://Users//15513//Documents//Stevens Institute of Technology//Sem 3//SSW 555 Web Campus//Project//Project Assignment 3//GEDCOM_data.ged')
