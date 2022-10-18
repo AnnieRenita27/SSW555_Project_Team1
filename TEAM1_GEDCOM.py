@@ -4,16 +4,11 @@ Team 1
 Team members :Annie Renita and Donjie Zou
 Public repository name on GitHub: SSW555_Project_Team1
 
-Program:
-This program calls the custom parse function to open to open the file via the 
-path provided, to make a list of individuals with unique Id and name of each 
-individual and a list of families with their indivial unique identifier, each 
-family member's name and individual's unique identifier. Assuming the range for 
-individuals will be less than 5000 and for families will be less than 1000.
-
 '''
 from tabulate import tabulate
 from datetime import date, datetime
+import time
+import us01,us02
 
 families = []
 individuals = []
@@ -181,7 +176,6 @@ def age(birthdate, death_date):
                     (death_date_obj.month, death_date_obj.day) < (birth_date_obj.month, birth_date_obj.day))
     return age_calc
 
-
 # Function for file length
 def file_len(f):
     for count, l in enumerate(f):
@@ -202,7 +196,7 @@ def fam_list():
 
 
 # Function to get the last name
-def get_last_name(str_name):
+def getLastName(str_name):
     temp = ''
     for i in str_name:
         if i != '/':
@@ -211,12 +205,56 @@ def get_last_name(str_name):
 
 
 # Function to get name by ID in list of individual
-def get_name_by_id(individual_list, person_id):
+def getNameByID(individual_list, person_id):
     for i in individual_list:
         if i[0] == person_id:
             return i[1]
 
+#Function for Listing Deascesed
+def death_list(ind_list):
+    dead_people = []
+    for i in ind_list:
+        if(len(i)>3):
+            if (i[4] != 0):
+                dead_people = dead_people+ [i[1]]
+    return dead_people
 
+#Funciton for Listing Living Married people
+def married_list(ind_list):
+    married = []
+    for i in ind_list:
+        if (i[4]==0 and i[6] != 0):
+            married = married + [i[1]]
+    return married
+
+#Calculate Age 
+def age(birthdate,deathdate):
+    birth_date_obj = datetime.strptime(birthdate, '%Y %b %d')
+    if(deathdate==0):
+        today = date.today()
+        age = today.year - birth_date_obj.year - ((today.month, today.day) < (birth_date_obj.month, birth_date_obj.day))
+    if(deathdate != 0):
+        death_date_obj = datetime.strptime(deathdate, '%Y %b %d')
+        age = death_date_obj.year - birth_date_obj.year - ((death_date_obj.month, death_date_obj.day) < (birth_date_obj.month, birth_date_obj.day))
+    #datetime.strptime(birthdate, format)
+    return age
+
+def find_duplicate_marriages(list_fam):
+    unique_marriages = []
+    duplicate_marriages = []
+    temp  = [list_fam]
+    for i in list_fam:
+        for j in temp[0:]:
+            if ((i[1] == j[1]) and (i[2] == j[2])) :
+                print(getNameByID(indi_list, i[1]),getNameByID(indi_list, i[1]), "their marriage record is more than 1.")
+                duplicate_marriages.append(i)
+            elif(i[3] == j[3]):
+                print(getNameByID(indi_list, i[1]),getNameByID(indi_list, i[1]), "their marriage record is more than 1.")
+                duplicate_marriages.append(i)
+            else:
+                unique_marriages.append(i)       
+    return duplicate_marriages
+            
 # Us10 marriage after fourteen
 def marriage_after_fourteen():  # US10: Marriage After 14
     proper_marriage = True
@@ -321,8 +359,7 @@ def list_deceased(list_table):  # US29: List Deceased
     list_table.append(
         ["US29", "List Deceased", "", True, results])
 
-
-# Function for parsing through the file and entering values in list_indi, list_fam
+#Function for storing data in list_indi, list_fam
 def parse(file_name):
     f = open(file_name, 'r')
     f_len = file_len(open(file_name))
@@ -355,7 +392,7 @@ def parse(file_name):
                         fam[0] = (str_array[1])
             if str_array[0] == '1':
                 if str_array[1] == 'NAME':
-                    indi[1] = str_array[2] + " " + get_last_name(str_array[3])
+                    indi[1] = str_array[2] + " " + getLastName(str_array[3])
                 if str_array[1] == 'SEX':
                     indi[2] = str_array[2]
                 if str_array[1] == 'BIRT':
@@ -366,64 +403,65 @@ def parse(file_name):
                     date_id = 'MARR'
                 if str_array[1] == 'DIV':
                     date_id = 'DIV'
-                if str_array[1] == 'FAMS':
-                    indi[5] = str_array[2]
-                if str_array[1] == 'FAMC':
-                    indi[6] = str_array[2]
-                if str_array[1] == 'HUSB':
-                    fam[1] = str_array[2]
-                if str_array[1] == 'WIFE':
-                    fam[2] = str_array[2]
-                if str_array[1] == 'CHIL':
-                    fam[5].append(str_array[2])
-            if str_array[0] == '2':
-                if str_array[1] == 'DATE':
-                    merged_date = str_array[4] + " " + str_array[3] + " " + str_array[2]
-                    if date_id == 'BIRT':
-                        indi[3] = merged_date
-                    if date_id == 'DEAT':
-                        indi[4] = merged_date
-                    if date_id == 'MARR':
-                        fam[3] = merged_date
-                    if date_id == 'DIV':
-                        fam[4] = merged_date
-                    if indi[3] != 0:
-                        indi[5] = age(indi[3], indi[4])
-    return list_individual, list_family
+                if(str[1] == 'FAMS'):
+                    indi[5] = str[2]
+                if(str[1] == 'FAMC'):
+                    indi[6] = str[2]
+                if(str[1] == 'HUSB'):
+                    fam[1] = str[2]
+                if(str[1] == 'WIFE'):
+                    fam[2] = str[2]
+                if(str[1] == 'CHIL'):
+                    fam[5].append(str[2])
+            if(str[0] == '2'):
+                if(str[1] == 'DATE'):
+                    date = str[4] + " " + str[3] + " " + str[2]
+                    if(date_id == 'BIRT'):
+                        indi[3] = date
+                    if(date_id == 'DEAT'):
+                        indi[4] = date
+                    if(date_id == 'MARR'):
+                        fam[3] = date
+                    if(date_id == 'DIV'):
+                        fam[4] = date
+    return list_indi, list_fam
 
-
-# Main
-list_indi, list_fam = parse('GEDCOM_data.ged')
+#Main 
+list_indi, list_fam = parse('C://Users//15513//Documents//Stevens Institute of Technology//Sem 3//SSW 555 Web Campus//Project//Project Assignment 3//GEDCOM_data.ged')
 list_indi.sort()
 list_fam.sort()
 
+list_death = death_list(list_indi)
+married = married_list(list_indi)
+duplicate_marriage_record = find_duplicate_marriages(list_fam)
 myData = []
 # Table header
 head = ["individual Unique ID", "Name", "Gender", "Birthday", "Age"]
 # Printing individual's unique identifier and name of that individual
 for i in list_indi:
-    print("Individual unique ID is: " + str(i[0]) + "\nName: " + str(i[1]) + "\n")
-    myData.append([i[0], i[1], i[2], i[3]])
+    myData.append([i[0],i[1],i[2],i[3],i[4],i[7]])
+    #print("Individual unique ID is: " + i[0] + "\nName: " + i[1] + "\n")
+    
+#Printing family's unique identifier, family member's names with their individual unique IDs
+for i in list_fam:
+    print("Family's unique ID: ", i[0],
+          "\nHusband's Name: " , getNameByID(list_indi,i[1])  , ", Individual unique ID:",i[1],
+          "\nWife's Name: ",getNameByID(list_indi,i[2]),", Individual unique ID:",i[2],"\n")
+    
+ 
 
-# Printing family's unique identifier, family member's names with their individual unique IDs
-# for i in list_fam:
-#     print("Family's unique ID: "+str(i[0])+
-#           "\nHusband's Name: "+getNameByID(list_indi,i[1])+", Individual unique ID:",i[1]+
-#           "\nWife's Name: "+getNameByID(list_indi,i[2])+", Individual unique ID:",i[2]+"\n")
 # display table
+ 
 print(tabulate(myData, headers=head, tablefmt="grid"))
 headers = ["User Story", "Description", "Notes", "Pass", "Result"]
 table = []
-
-
-# End
-
 def main():
     process_file(read_file())
     print("--- Individuals ---\n{}\n".format(print_individuals()))
     print("--- Families ---\n{}\n".format(print_families()))
     print("--- User Stories ---\n{}".format(run_stories()))
 
-
 if __name__ == '__main__':
     main()
+   
+#End
