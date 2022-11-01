@@ -9,11 +9,206 @@ from tabulate import tabulate
 from datetime import date, datetime
 import time
 import us01,us02
+import us01,us02, us04,us05
 
 families = []
 individuals = []
 FILE_NAME = "GEDCOM_data.ged"
+#Function for file length
+def file_len(f):
+    for i,l in enumerate(f):
+        pass
+    return i+1
 
+# Function to create a list for indivials
+def indi_list():
+    return [0 for i in range(4999)]
+
+#Function to create a list for families
+def fam_list():
+    oplist = [0 for i in range(999)]
+    oplist[5] = []
+    return oplist
+
+#Function to get the last name
+def getLastName(str):
+    temp=''
+    for i in str:
+        if(i != '/'):
+            temp += i
+    return temp
+#Function to get name by ID in list of individual
+def getNameByID(indi_list, id):
+    for i in indi_list:
+        if(i[0] == id):
+            return i[1]
+
+#Function for Listing Deascesed
+def death_list(ind_list):
+    dead_people = []
+    for i in ind_list:
+        if(len(i)>3):
+            if (i[4] != 0):
+                dead_people = dead_people+ [i[1]]
+    return dead_people
+
+#Funciton for Listing Living Married people
+def married_list(ind_list):
+    married = []
+    for i in ind_list:
+        if (i[4]==0 and i[6] != 0):
+            married = married + [i[1]]
+    return married
+
+#Function for seeing if an individual has less than 15 siblings
+def siblings(fam_list, ind):
+    fam = fam_list[0]
+    i = 1
+    while(fam[0]!= ind[6]):
+        fam = fam_list[i]
+        i=i+1
+    if(len(fam[5])<15):
+        return True
+    else:
+        return False
+    
+#Function for seeing if all males in family have same last name
+def male_lastName(ind_list, fam):
+    last_name = getNameByID(list_indi,fam[1]).split()[1]
+    for i in fam[5]:
+        son = ind_list[0]
+        x = 1
+        while(son[0]!=i):
+            son=ind_list[x]
+            x=x+1
+        if(son[2] == "M" and son[1].split()[1]!=last_name):
+            return False
+
+    return True 
+
+
+def uniqueIDs(list_indi,list_fam):
+    uniq_indiIds = []
+    duplicate_indiIds =[]
+
+    for i in list_indi:
+        if i[0] not in uniq_indiIds:
+            uniq_indiIds.append(i[0])
+        else:
+            duplicate_indiIds.append(i[0])
+            print(i[0]," is not a Unique Individual ID.")
+            
+    uniq_famIds = []
+    duplicate_famIds =[]
+    for i in list_fam:
+        if i[0] not in uniq_famIds:
+            uniq_famIds.append(i[0])
+        else:
+            duplicate_famIds.append(i[0])
+            print(i[0]," is not a Unique Individual ID.")
+               
+    
+    return print("\n Unique Individual Ids are:",uniq_indiIds,"\n\n Unique Family Ids are :", uniq_famIds)
+
+#Function to check and return duplicate marriages
+def find_duplicate_marriages(list_fam):
+    unique_marriages = []
+    duplicate_marriages = []
+    temp  = [list_fam]
+    for i in list_fam:
+        for j in temp[0:]:
+            if ((i[1] == j[1]) and (i[2] == j[2])) :
+                print(i[1]," and ",i[2], ",their marriage record is more than 1.")
+                duplicate_marriages.append(i)
+                if (i[3] == j[3]):
+                    print(getNameByID(list_indi, i[0]),getNameByID(list_indi, j[2]), "their marriage record is more than 1.")    
+                    duplicate_marriages.append(i)
+            else:
+                unique_marriages.append(i)       
+    return duplicate_marriages
+
+#Function to calculate age
+def age(birthdate,deathdate):
+    birth_date_obj = datetime.strptime(birthdate, '%Y %b %d')
+    if(deathdate==0):
+        today = date.today()
+        age = today.year - birth_date_obj.year - ((today.month, today.day) < (birth_date_obj.month, birth_date_obj.day))
+    if(deathdate != 0):
+        death_date_obj = datetime.strptime(deathdate, '%Y %b %d')
+        age = death_date_obj.year - birth_date_obj.year - ((death_date_obj.month, death_date_obj.day) < (birth_date_obj.month, birth_date_obj.day))
+    #datetime.strptime(birthdate, format)
+    return age
+
+
+
+def uniqueIDs(list_indi,list_fam):
+    uniq_indiIds = []
+    duplicate_indiIds =[]
+
+    for i in list_indi:
+        if i[0] not in uniq_indiIds:
+            uniq_indiIds.append(i[0])
+        else:
+            duplicate_indiIds.append(i[0])
+            print(i[0]," is not a Unique Individual ID.")
+            
+    uniq_famIds = []
+    duplicate_famIds =[]
+    for i in list_fam:
+        if i[0] not in uniq_famIds:
+            uniq_famIds.append(i[0])
+        else:
+            duplicate_famIds.append(i[0])
+            print(i[0]," is not a Unique Individual ID.")
+               
+    
+    return print("\n Unique Individual Ids are:",uniq_indiIds,"\n\n Unique Family Ids are :", uniq_famIds)
+
+#Function to check and return duplicate marriages
+def find_duplicate_marriages(list_fam):
+    unique_marriages = []
+    duplicate_marriages = []
+    temp  = [list_fam]
+    for i in list_fam:
+        for j in temp[0:]:
+            if ((i[1] == j[1]) and (i[2] == j[2])) :
+                print(i[1]," and ",i[2], ",their marriage record is more than 1.")
+                duplicate_marriages.append(i)
+                if (i[3] == j[3]):
+                    print(getNameByID(list_indi, i[0]),getNameByID(list_indi, j[2]), "their marriage record is more than 1.")    
+                    duplicate_marriages.append(i)
+            else:
+                unique_marriages.append(i)       
+    return duplicate_marriages
+
+#Function to check for deaths before and returns I
+def _birth_before_death(list_indi):
+    errors = []
+    no_errors = []
+    
+    for i in list_indi: 
+        if i[3] == "NA":
+            errors.append(i[0],getNameByID(list_indi, i[0]))
+        else:
+               if i[3]!= "NA":
+                try:
+                    birth_date = datetime.strptime(str(i[3]), '%Y-%m-%d')
+                except ValueError:
+                    birth_date = datetime.strptime("2018-01-01", '%Y-%m-%d')
+                try:
+                    death_date = datetime.strptime(str(i[4]), '%Y-%m-%d')
+                except ValueError:
+                    death_date = datetime.strptime("2018-01-01", '%Y-%m-%d')
+                
+                if (str(death_date) >= str(birth_date)):
+                    print(no_errors.append(i[0]),getNameByID(list_indi, i[0]))
+                else: 
+                    print(i[0],getNameByID(list_indi, i[0]))
+    #         else:
+    #             return print("ERROR: Death date for ", getNameByID(list_indi, i[0]) ," is 'NA'.")
+    #     else:
+    #         return print("ERROR: Birth date ", getNameByID(list_indi, i[0]) ," is'NA'.")
+    return no_errors
 
 class Individual:
     def __init__(self, i_id):
@@ -81,7 +276,7 @@ def process_individual(lines, index, new_individual):
 
 
 def read_file():
-    with open("C://Users//15513//Documents//Stevens Institute of Technology//Sem 3//SSW 555 Web Campus//Project//Project Assignment 3//GEDCOM_data.ged") as file:
+    with open("C:/Users/parag/OneDrive/Documents/GitHub/SSW555_Project_Team1/GEDCOM_data.ged") as file:
         lines = file.readlines()
     file.close()
     return lines
@@ -163,98 +358,37 @@ def process_family(lines, index, new_family):
 def format_date(input_date):
     return datetime.strftime(input_date, '%d %b %Y')
 
-
-# Calculate Age
-def age(birthdate, death_date):
-    birth_date_obj = datetime.strptime(birthdate, '%Y %b %d')
-    if death_date == 0:
-        today = date.today()
-        age_calc = today.year - birth_date_obj.year - ((today.month, today.day) < (birth_date_obj.month, birth_date_obj.day))
-    if death_date != 0:
-        death_date_obj = datetime.strptime(death_date, '%Y %b %d')
-        age_calc = death_date_obj.year - birth_date_obj.year - (
-                    (death_date_obj.month, death_date_obj.day) < (birth_date_obj.month, birth_date_obj.day))
-    return age_calc
-
-# Function for file length
-def file_len(f):
-    for count, l in enumerate(f):
-        pass
-    return count + 1
-
-
-# Function to create a list for individuals
-def indi_list():
-    return [0 for i in range(4999)]
-
-
-# Function to create a list for families
-def fam_list():
-    plist = [0 for i in range(999)]
-    plist[5] = []
-    return plist
-
-
-# Function to get the last name
-def getLastName(str_name):
-    temp = ''
-    for i in str_name:
-        if i != '/':
-            temp += i
-    return temp
-
-
-# Function to get name by ID in list of individual
-def getNameByID(individual_list, person_id):
-    for i in individual_list:
-        if i[0] == person_id:
-            return i[1]
-
-#Function for Listing Deascesed
-def death_list(ind_list):
-    dead_people = []
-    for i in ind_list:
-        if(len(i)>3):
-            if (i[4] != 0):
-                dead_people = dead_people+ [i[1]]
-    return dead_people
-
-#Funciton for Listing Living Married people
-def married_list(ind_list):
-    married = []
-    for i in ind_list:
-        if (i[4]==0 and i[6] != 0):
-            married = married + [i[1]]
-    return married
-
-#Calculate Age 
-def age(birthdate,deathdate):
-    birth_date_obj = datetime.strptime(birthdate, '%Y %b %d')
-    if(deathdate==0):
-        today = date.today()
-        age = today.year - birth_date_obj.year - ((today.month, today.day) < (birth_date_obj.month, birth_date_obj.day))
-    if(deathdate != 0):
-        death_date_obj = datetime.strptime(deathdate, '%Y %b %d')
-        age = death_date_obj.year - birth_date_obj.year - ((death_date_obj.month, death_date_obj.day) < (birth_date_obj.month, birth_date_obj.day))
-    #datetime.strptime(birthdate, format)
-    return age
-
-def find_duplicate_marriages(list_fam):
-    unique_marriages = []
-    duplicate_marriages = []
-    temp  = [list_fam]
-    for i in list_fam:
-        for j in temp[0:]:
-            if ((i[1] == j[1]) and (i[2] == j[2])) :
-                print(getNameByID(indi_list, i[1]),getNameByID(indi_list, i[1]), "their marriage record is more than 1.")
-                duplicate_marriages.append(i)
-            elif(i[3] == j[3]):
-                print(getNameByID(indi_list, i[1]),getNameByID(indi_list, i[1]), "their marriage record is more than 1.")
-                duplicate_marriages.append(i)
-            else:
-                unique_marriages.append(i)       
-    return duplicate_marriages
+#US25 Unique first names of children in family
+def unique_first_famnames():  
+    #families = get_family()
+    notes = []
+    for family in families:
+        males = []
+        if family.husband or family.wife  or family.children:
+            if family.husband is not None:
+                #print(family['FAMID'])
+                males.append(get_individual(family.husband).name)
+                males.append(get_individual(family.wife).name)
             
+            if family.children is not None:
+                for child in family.children:
+                    #print child
+                    child_data=get_individual(child)
+                    #if 'SEX' in child_data:
+                    #    if child_data['SEX']=='M':
+                    males.append(child_data.name)
+        unique_surname=list()
+        if males is not None:
+            for male in males:
+                unique_surname.append(male[0])
+                #print unique_surname
+                #print male[0]
+        
+        if len(unique_surname) != len(set(unique_surname)):
+            result = "First name of some members in this Family is Unique"
+            print(result)
+    
+
 # Us10 marriage after fourteen
 def marriage_after_fourteen():  # US10: Marriage After 14
     proper_marriage = True
@@ -435,14 +569,28 @@ list_fam.sort()
 
 list_death = death_list(list_indi)
 married = married_list(list_indi)
-duplicate_marriage_record = find_duplicate_marriages(list_fam)
-myData = []
-# Table header
-head = ["individual Unique ID", "Name", "Gender", "Birthday", "Age"]
-# Printing individual's unique identifier and name of that individual
+
+#Use " duplicate_marriage_records " to check & display any duplicate marriages present if any
+duplicate_marriage_records = find_duplicate_marriages(list_fam)
+
+#Use " Unique_Ids " to check and display unique individual and family IDs
+Unique_IDs = uniqueIDs(list_indi,list_fam)
+
+# Use " birth_before_death " to check and display if there are any deaths before birth
+birth_before_death = _birth_before_death(list_indi)
+
+#List to store the data to be displayed in a table
+myData = [] 
+#Table header
+head = ["Individual Unique ID", "Name","Gender","Birthday","Death Date","Age"]
+
+#Printing individual's details in a tabular format
 for i in list_indi:
     myData.append([i[0],i[1],i[2],i[3],i[4],i[7]])
     #print("Individual unique ID is: " + i[0] + "\nName: " + i[1] + "\n")
+    
+#Display table  
+print(tabulate(myData, headers=head, tablefmt="grid"))
     
 #Printing family's unique identifier, family member's names with their individual unique IDs
 for i in list_fam:
