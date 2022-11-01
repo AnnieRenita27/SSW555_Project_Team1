@@ -8,7 +8,6 @@ Public repository name on GitHub: SSW555_Project_Team1
 from tabulate import tabulate
 from datetime import date, datetime
 import time
-import us01,us02
 import us01,us02, us04,us05
 
 families = []
