@@ -1,3 +1,4 @@
+
 '''
 SSW 555 Project:
 Team 1
@@ -14,13 +15,14 @@ individuals will be less than 5000 and for families will be less than 1000.
 '''
 #from socket import SOL_NETROM
 from tabulate import tabulate
-from datetime import date, datetime
+from datetime import date,datetime
 import time
 import us01,us02, us04,us05
 
 families = []
 individuals = []
 FILE_NAME = "GEDCOM_data.ged"
+
 #Function for file length
 def file_len(f):
     for i,l in enumerate(f):
@@ -44,6 +46,7 @@ def getLastName(str):
         if(i != '/'):
             temp += i
     return temp
+
 #Function to get name by ID in list of individual
 def getNameByID(indi_list, id):
     for i in indi_list:
@@ -91,24 +94,7 @@ def male_lastName(ind_list, fam):
         if(son[2] == "M" and son[1].split()[1]!=last_name):
             return False
 
-    return True 
-
-#Function to check and return duplicate marriages
-def find_duplicate_marriages(list_fam):
-    unique_marriages = []
-    duplicate_marriages = []
-    temp  = [list_fam]
-    for i in list_fam:
-        for j in temp[0:]:
-            if ((i[1] == j[1]) and (i[2] == j[2])) :
-                print(i[1]," and ",i[2], ",their marriage record is more than 1.")
-                duplicate_marriages.append(i)
-                if (i[3] == j[3]):
-                    print(getNameByID(list_indi, i[0]),getNameByID(list_indi, j[2]), "their marriage record is more than 1.")    
-                    duplicate_marriages.append(i)
-            else:
-                unique_marriages.append(i)       
-    return duplicate_marriages
+    return True       
 
 #Function to calculate age
 def age(birthdate,deathdate):
@@ -341,39 +327,6 @@ def process_family(lines, index, new_family):
 def format_date(input_date):
     return datetime.strftime(input_date, '%d %b %Y')
 
-
-#US25 Unique first names of children in family
-def unique_first_famnames():  
-    #families = get_family()
-    notes = []
-    for family in families:
-        males = []
-        if family.husband or family.wife  or family.children:
-            if family.husband is not None:
-                #print(family['FAMID'])
-                males.append(get_individual(family.husband).name)
-                males.append(get_individual(family.wife).name)
-            
-            if family.children is not None:
-                for child in family.children:
-                    #print child
-                    child_data=get_individual(child)
-                    #if 'SEX' in child_data:
-                    #    if child_data['SEX']=='M':
-                    males.append(child_data.name)
-        unique_surname=list()
-        if males is not None:
-            for male in males:
-                unique_surname.append(male[0])
-                #print unique_surname
-                #print male[0]
-        
-        if len(unique_surname) != len(set(unique_surname)):
-            result = "First name of some members in this Family is Unique"
-            print(result)
-    
-
-
 # Us10 marriage after fourteen
 def marriage_after_fourteen():  # US10: Marriage After 14
     proper_marriage = True
@@ -480,72 +433,72 @@ def list_deceased(list_table):  # US29: List Deceased
 
 #Function for storing data in list_indi, list_fam
 def parse(file_name):
-    f = open(file_name, 'r')
+    f = open(file_name,'r')
     f_len = file_len(open(file_name))
     indi_on = 0
     fam_on = 0
-    list_individual = []
-    list_family = []
+    list_indi = []
+    list_fam = []
     indi = indi_list()
     fam = fam_list()
     for line in f:
-        str_array = line.split()
-        if str_array:
-            if str_array[0] == '0':
-                if indi_on == 1:
-                    list_individual.append(indi)
+        str = line.split()
+        if(str != []):
+            if(str[0] == '0'):
+                if(indi_on == 1):
+                    list_indi.append(indi)
                     indi = indi_list()
                     indi_on = 0
-                if fam_on == 1:
-                    list_family.append(fam)
+                if(fam_on == 1):
+                    list_fam.append(fam)
                     fam = fam_list()
                     fam_on = 0
-                if str_array[1] in ['NOTE', 'HEAD', 'TRLR']:
+                if(str[1] in ['NOTE', 'HEAD', 'TRLR']):
                     pass
                 else:
-                    if str_array[2] == 'INDI':
+                    if(str[2] == 'INDI'):
                         indi_on = 1
-                        indi[0] = (str_array[1])
-                    if str_array[2] == 'FAM':
+                        indi[0] = (str[1])
+                    if(str[2] == 'FAM'):
                         fam_on = 1
-                        fam[0] = (str_array[1])
-            if str_array[0] == '1':
-                if str_array[1] == 'NAME':
-                    indi[1] = str_array[2] + " " + getLastName(str_array[3])
-                if str_array[1] == 'SEX':
-                    indi[2] = str_array[2]
-                if str_array[1] == 'BIRT':
+                        fam[0] = (str[1])
+            if(str[0] == '1'):
+                if(str[1] == 'NAME'):
+                    indi[1] = str[2] + " " + getLastName(str[3])
+                if(str[1] == 'SEX'):
+                    indi[2] = str[2]
+                if(str[1] == 'BIRT'):
                     date_id = 'BIRT'
-                if str_array[1] == 'DEAT':
+                if(str[1] == 'DEAT'):
                     date_id = 'DEAT'
-                if str_array[1] == 'MARR':
+                if(str[1] == 'MARR'):
                     date_id = 'MARR'
-                if str_array[1] == 'DIV':
+                if(str[1] == 'DIV'):
                     date_id = 'DIV'
-                if str_array[1] == 'FAMS':
-                    indi[5] = str_array[2]
-                if str_array[1] == 'FAMC':
-                    indi[6] = str_array[2]
-                if str_array[1] == 'HUSB':
-                    fam[1] = str_array[2]
-                if str_array[1] == 'WIFE':
-                    fam[2] = str_array[2]
-                if str_array[1] == 'CHIL':
-                    fam[5].append(str_array[2])
-            if str_array[0] == '2':
-                if str_array[1] == 'DATE':
-                    merged_date = str_array[4] + " " + str_array[3] + " " + str_array[2]
-                    if date_id == 'BIRT':
-                        indi[3] = merged_date
-                    if date_id == 'DEAT':
-                        indi[4] = merged_date
-                    if date_id == 'MARR':
-                        fam[3] = merged_date
-                    if date_id == 'DIV':
-                        fam[4] = merged_date
-                    if indi[3] != 0:
-                        indi[5] = age(indi[3], indi[4])
-    return list_individual, list_family
+                if(str[1] == 'FAMS'):
+                    indi[5] = str[2]
+                if(str[1] == 'FAMC'):
+                    indi[6] = str[2]
+                if(str[1] == 'HUSB'):
+                    fam[1] = str[2]
+                if(str[1] == 'WIFE'):
+                    fam[2] = str[2]
+                if(str[1] == 'CHIL'):
+                    fam[5].append(str[2])
+            if(str[0] == '2'):
+                if(str[1] == 'DATE'):
+                    date = str[4] + " " + str[3] + " " + str[2]
+                    if(date_id == 'BIRT'):
+                        indi[3] = date
+                    if(date_id == 'DEAT'):
+                        indi[4] = date
+                    if(date_id == 'MARR'):
+                        fam[3] = date
+                    if(date_id == 'DIV'):
+                        fam[4] = date
+                    if(indi[3] != 0):
+                        indi[7] = age(indi[3],indi[4])
+    return list_indi, list_fam
 
 #main
 list_indi, list_fam = parse('C:/Users/15513/Documents/Stevens Institute of Technology/Sem 3/SSW 555 Web Campus/Project/Project 6 Sprint - 2/GEDCOM_data.ged')
@@ -554,21 +507,8 @@ list_fam.sort()
 #Use " list_death " to display the death list
 list_death = death_list(list_indi)
 
+#Use " married " to display the married list 
 married = married_list(list_indi)
-# Use " birth_before_death " to check and display if there are any deaths before birth
-birth_before_death = _birth_before_death(list_indi)
-
-#Use " duplicate_marriage_records " to check & display any duplicate marriages present if any
-duplicate_marriage_records = find_duplicate_marriages(list_fam)
-
-#Use " Unique_Ids " to check and display unique individual and family IDs
-Unique_IDs = uniqueIDs(list_indi,list_fam)
-
-#Use " duplicate_marriage_records " to check & display any duplicate marriages present if any
-duplicate_marriage_records = find_duplicate_marriages(list_fam)
-
-#Use " Unique_Ids " to check and display unique individual and family IDs
-Unique_IDs = uniqueIDs(list_indi,list_fam)
 
 #Use " duplicate_marriage_records " to check & display any duplicate marriages present if any
 duplicate_marriage_records = find_duplicate_marriages(list_fam)
