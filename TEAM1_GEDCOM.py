@@ -17,7 +17,7 @@ individuals will be less than 5000 and for families will be less than 1000.
 from tabulate import tabulate
 from datetime import date,datetime
 import time
-import us01,us02, us04,us05
+import us01,us02, us04, us05, us06, us21
 
 families = []
 individuals = []
@@ -109,7 +109,7 @@ def age(birthdate,deathdate):
     return age
 
 
-
+# US22: Unique Ids 
 def uniqueIDs(list_indi,list_fam):
     uniq_indiIds = []
     duplicate_indiIds =[]
@@ -133,7 +133,7 @@ def uniqueIDs(list_indi,list_fam):
     
     return print("\n Unique Individual Ids are:",uniq_indiIds,"\n\n Unique Family Ids are :", uniq_famIds)
 
-#Function to check and return duplicate marriages
+#US24: Function to check and return duplicate marriages
 def find_duplicate_marriages(list_fam):
     unique_marriages = []
     duplicate_marriages = []
@@ -150,6 +150,22 @@ def find_duplicate_marriages(list_fam):
                 unique_marriages.append(i)       
     return duplicate_marriages
 
+# US07: Function to check age is less than 150 years
+def less_than_150years(list_indi):
+    for i in list_indi:
+        if i[7] > 150:
+           print("ERROR :  For ", i[0], i[1],", the age should be less than 150 years.") 
+        else:
+           print("For ", i[0], i[1],", the age is less than 150 years.")
+    return
+    
+# # US11: Function to for no biogamy
+# def no_biogamy(list_fam):
+    
+    
+    
+    
+    
 #Function to check for deaths before and returns I
 def _birth_before_death(list_indi):
     errors = []
@@ -198,7 +214,6 @@ class Family:
         self.husband = None
         self.wife = None
         self.children = []
-
 
 def run_stories():
     tbl_headers = ["User Story", "Description", "Notes", "Pass", "Result"]
@@ -327,8 +342,8 @@ def process_family(lines, index, new_family):
 def format_date(input_date):
     return datetime.strftime(input_date, '%d %b %Y')
 
-# Us10 marriage after fourteen
-def marriage_after_fourteen():  # US10: Marriage After 14
+# US10: Marriage After 14
+def marriage_after_fourteen():  
     proper_marriage = True
     notes = []
     for fam in families:
@@ -367,7 +382,7 @@ def marriage_after_fourteen():  # US10: Marriage After 14
     print(result)
 
 
-# US13 siblings spacing
+# US13: siblings spacing
 def sibling_age_space(table_list):  # US13: Sibling Age Spacing
     sibling_space = True
     notes = []
@@ -390,7 +405,39 @@ def sibling_age_space(table_list):  # US13: Sibling Age Spacing
         ["US13", "Sibling Age Spacing", "\n".join(notes), sibling_space, result])
 
 
-def birth_before_parents_death(list_table):  # US09: Birth Before Death of Parents
+#US25 Unique first names of children in family
+def unique_first_famnames():  
+    #families = get_family()
+    notes = []
+    for family in families:
+        males = []
+        if family.husband or family.wife  or family.children:
+            if family.husband is not None:
+                #print(family['FAMID'])
+                males.append(get_individual(family.husband).name)
+                males.append(get_individual(family.wife).name)
+            
+            if family.children is not None:
+                for child in family.children:
+                    #print child
+                    child_data=get_individual(child)
+                    #if 'SEX' in child_data:
+                    #    if child_data['SEX']=='M':
+                    males.append(child_data.name)
+        unique_surname=list()
+        if males is not None:
+            for male in males:
+                unique_surname.append(male[0])
+                #print unique_surname
+                #print male[0]
+        
+        if len(unique_surname) != len(set(unique_surname)):
+            result = "First name of some members in this Family is Unique"
+            print(result)
+    
+
+# US09: Birth Before Death of Parents
+def birth_before_parents_death(list_table):  
     valid_birth = True
     notes = []
     for ind in individuals:
@@ -537,9 +584,22 @@ for i in list_fam:
     print("Family's unique ID: ", i[0],
           "\nHusband's Name: " , getNameByID(list_indi,i[1])  , ", Individual unique ID:",i[1],
           "\nWife's Name: ",getNameByID(list_indi,i[2]),", Individual unique ID:",i[2],"\n")
-     
-# for i in list_fam:
-#     print("Do all males in family " +i[0]+" have the same last name "+(str)(male_lastName(list_indi,i)))
+    
+ 
 
-     
+# # display table
+ 
+# print(tabulate(myData, headers=head, tablefmt="grid"))
+# headers = ["User Story", "Description", "Notes", "Pass", "Result"]
+# table = []
+# def main():
+#     process_file(read_file())
+#     print("--- Individuals ---\n{}\n".format(print_individuals()))
+#     print("--- Families ---\n{}\n".format(print_families()))
+#     print("--- User Stories ---\n{}".format(run_stories()))
+
+# if __name__ == '__main__':
+#     main()
+   
 #End
+
