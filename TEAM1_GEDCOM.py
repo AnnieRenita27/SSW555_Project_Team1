@@ -238,6 +238,18 @@ def _birth_before_death(list_indi):
     #         return print("ERROR: Birth date ", getNameByID(list_indi, i[0]) ," is'NA'.")
     return no_errors
 
+# # US 31: List of People Who have never been amried and are over 30
+def single(list_indi):
+    result = []
+    for i in list_indi:
+        if (i[7]>=30):
+            if(i[5]==""):
+                result = result + [i[1]]
+    return result
+
+# # US 32: 
+def mul_Briths():
+    result = []
 class Individual:
     def __init__(self, i_id):
         self.i_id = i_id
