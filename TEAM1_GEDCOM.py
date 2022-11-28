@@ -1,3 +1,5 @@
+#from socket import SOL_NETROM
+import unittest
 
 '''
 SSW 555 Project:
@@ -19,6 +21,47 @@ from datetime import date,datetime
 import time
 import us01,us02, us04, us05, us06, us21
 
+#Function for seeing if an indavidual has less than 15 siblings
+def siblings(fam_list, ind):
+    fam = fam_list[0]
+    i = 1
+    while(fam[0]!= ind[6]):
+        fam = fam_list[i]
+        i=i+1
+    if(len(fam[5])<15):
+        return True
+    else:
+        return False
+#Function for seeing if all males in family have same last name
+def male_lastName(ind_list, fam):
+    last_name = getNameByID(list_indi,fam[1]).split()[1]
+    for i in fam[5]:
+        son = ind_list[0]
+        x = 1
+        while(son[0]!=i):
+            son=ind_list[x]
+            x=x+1
+        if(son[2] == "M" and son[1].split()[1]!=last_name):
+            return False
+
+    return True
+#Function for Listing Deascesed
+def death_list(ind_list):
+    dead_people = []
+    for i in ind_list:
+        if(len(i)>3):
+            if (i[4] != 0):
+                dead_people = dead_people+ [i[1]]
+    return dead_people
+
+#Funciton for Listing Living Married people
+def married_list(ind_list):
+    married = []
+    for i in ind_list:
+        if (i[4]==0 and i[6] != 0):
+            married = married + [i[1]]
+    return married
+        
 families = []
 individuals = []
 FILE_NAME = "GEDCOM_data.ged"
@@ -581,6 +624,11 @@ print(tabulate(myData, headers=head, tablefmt="grid"))
     
 #Printing family's unique identifier, family member's names with their individual unique IDs
 for i in list_fam:
+    print("Family's unique ID: "+i[0]+
+          "\nHusband's Name: "+getNameByID(list_indi,i[1])+", Individual unique ID:",i[1]+
+          "\nWife's Name: "+getNameByID(list_indi,i[2])+", Individual unique ID:",i[2]+"\n")
+for i in list_fam:
+    print("Do all males in family " +i[0]+" have the same last name "+(str)(male_lastName(list_indi,i)))
     print("Family's unique ID: ", i[0],
           "\nHusband's Name: " , getNameByID(list_indi,i[1])  , ", Individual unique ID:",i[1],
           "\nWife's Name: ",getNameByID(list_indi,i[2]),", Individual unique ID:",i[2],"\n")
