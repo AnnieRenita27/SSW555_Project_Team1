@@ -248,8 +248,17 @@ def single(list_indi):
     return result
 
 # # US 32: 
-def mul_Briths():
+def mul_Briths(list_indi):
     result = []
+    for i in list_indi:
+        for a in list_indi:
+            if (i[1]!=a[1]):
+                if (i[3]==a[3]):
+                    result = result + [i[3]]
+    return result
+
+
+
 class Individual:
     def __init__(self, i_id):
         self.i_id = i_id
