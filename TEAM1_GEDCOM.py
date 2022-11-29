@@ -541,6 +541,24 @@ def list_deceased(list_table):  # US29: List Deceased
 
     list_table.append(
         ["US29", "List Deceased", "", True, results])
+#  # US 41 and 42
+def check_date(raw):
+    daysMon= [31,29,31,30,31,30,31,31,30,31,30,31]
+    months = ["Jan","FED","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"]
+    if(raw[2]<=31 and raw[3] in months and raw[4] >= 1000):
+        count = 0
+        for i in months:
+            if(raw[3]== i):
+                if (raw[2]<=daysMon[count]):
+                    break
+                else:
+                    return raw[4] + " " + raw[3] + " " + daysMon[count] 
+        return raw[4] + " " + raw[3] + " " + raw[2]
+    if( raw[2] in months and raw[3] >= 1000):
+        return raw[3] + " " + raw[2]
+    else:
+        return raw[2]
+
 
 #Function for storing data in list_indi, list_fam
 def parse(file_name):
