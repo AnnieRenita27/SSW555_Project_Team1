@@ -238,6 +238,27 @@ def _birth_before_death(list_indi):
     #         return print("ERROR: Birth date ", getNameByID(list_indi, i[0]) ," is'NA'.")
     return no_errors
 
+# # US 31: List of People Who have never been amried and are over 30
+def single(list_indi):
+    result = []
+    for i in list_indi:
+        if (i[7]>=30):
+            if(i[5]==""):
+                result = result + [i[1]]
+    return result
+
+# # US 32: 
+def mul_Briths(list_indi):
+    result = []
+    for i in list_indi:
+        for a in list_indi:
+            if (i[1]!=a[1]):
+                if (i[3]==a[3]):
+                    result = result + [i[3]]
+    return result
+
+
+
 class Individual:
     def __init__(self, i_id):
         self.i_id = i_id
@@ -520,6 +541,24 @@ def list_deceased(list_table):  # US29: List Deceased
 
     list_table.append(
         ["US29", "List Deceased", "", True, results])
+#  # US 41 and 42
+def check_date(raw):
+    daysMon= [31,29,31,30,31,30,31,31,30,31,30,31]
+    months = ["Jan","FED","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"]
+    if(raw[2]<=31 and raw[3] in months and raw[4] >= 1000):
+        count = 0
+        for i in months:
+            if(raw[3]== i):
+                if (raw[2]<=daysMon[count]):
+                    break
+                else:
+                    return raw[4] + " " + raw[3] + " " + daysMon[count] 
+        return raw[4] + " " + raw[3] + " " + raw[2]
+    if( raw[2] in months and raw[3] >= 1000):
+        return raw[3] + " " + raw[2]
+    else:
+        return raw[2]
+
 
 #Function for storing data in list_indi, list_fam
 def parse(file_name):
