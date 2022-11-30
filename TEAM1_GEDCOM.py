@@ -53,6 +53,18 @@ def getNameByID(indi_list, id):
         if(i[0] == id):
             return i[1]
 
+def get_people():
+	people=individuals
+	results_for_people = [j for j in people] #count = cursor.count()
+	return results_for_people
+
+def output(x):
+	# print ()
+	xs = open('output.txt', 'a')
+	xs.seek(0)
+	xs.write(str(x))
+	xs.write('\n')
+
 #Function for Listing Deascesed
 def death_list(ind_list):
     dead_people = []
@@ -381,6 +393,27 @@ def marriage_after_fourteen():
         result = "Someone got married way too early."
     print(result)
 
+
+#US31 List Living Single
+def list_living_single(table): 
+    living_single = []
+
+    for person in individuals:
+        if person.spouse_id is None and person.death is None:
+            living_single.append(person.name)
+
+    table.append(
+        ["US31", "List Living Single", "", True, "\n".join(living_single)])
+
+#US35 List large age differences
+def US35_list_recent_births():
+	people = get_people()
+	for doc in people:
+		if "birthday" in doc and doc["birthday"] is not None:
+			birth_date = datetime.strptime(doc["birthday"],"%Y-%m-%d %H:%M:%S") 
+			delta = datetime.date(datetime.now()) - datetime.date(birth_date)
+			if(delta.days < 30 and delta.days >= 0):
+				output('\t' + doc["ID"] + '\t\t\t%-10s' % doc["NAME"][0] + " %-10s" % (doc["NAME"][1]).strip("/") + '\t\t' + doc['birthday'] + '\t\t' + str(delta.days))
 
 # US13: siblings spacing
 def sibling_age_space(table_list):  # US13: Sibling Age Spacing
