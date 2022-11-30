@@ -1,5 +1,3 @@
-#from socket import SOL_NETROM
-import unittest
 
 '''
 SSW 555 Project:
@@ -17,51 +15,11 @@ individuals will be less than 5000 and for families will be less than 1000.
 '''
 #from socket import SOL_NETROM
 from tabulate import tabulate
+from dateutil import parser
 from datetime import date,datetime
 import time
-import us01,us02, us04, us05, us06, us21
+import us01,us02, us04, us05, us06, us21, us35, us36
 
-#Function for seeing if an indavidual has less than 15 siblings
-def siblings(fam_list, ind):
-    fam = fam_list[0]
-    i = 1
-    while(fam[0]!= ind[6]):
-        fam = fam_list[i]
-        i=i+1
-    if(len(fam[5])<15):
-        return True
-    else:
-        return False
-#Function for seeing if all males in family have same last name
-def male_lastName(ind_list, fam):
-    last_name = getNameByID(list_indi,fam[1]).split()[1]
-    for i in fam[5]:
-        son = ind_list[0]
-        x = 1
-        while(son[0]!=i):
-            son=ind_list[x]
-            x=x+1
-        if(son[2] == "M" and son[1].split()[1]!=last_name):
-            return False
-
-    return True
-#Function for Listing Deascesed
-def death_list(ind_list):
-    dead_people = []
-    for i in ind_list:
-        if(len(i)>3):
-            if (i[4] != 0):
-                dead_people = dead_people+ [i[1]]
-    return dead_people
-
-#Funciton for Listing Living Married people
-def married_list(ind_list):
-    married = []
-    for i in ind_list:
-        if (i[4]==0 and i[6] != 0):
-            married = married + [i[1]]
-    return married
-        
 families = []
 individuals = []
 FILE_NAME = "GEDCOM_data.ged"
@@ -139,6 +97,7 @@ def male_lastName(ind_list, fam):
 
     return True       
 
+
 #Function to calculate age
 def age(birthdate,deathdate):
     birth_date_obj = datetime.strptime(birthdate, '%Y %b %d')
@@ -176,7 +135,8 @@ def uniqueIDs(list_indi,list_fam):
     
     return print("\n Unique Individual Ids are:",uniq_indiIds,"\n\n Unique Family Ids are :", uniq_famIds)
 
-#US24: Function to check and return duplicate marriages
+
+# US24: Function to check and return duplicate marriages
 def find_duplicate_marriages(list_fam):
     unique_marriages = []
     duplicate_marriages = []
@@ -193,6 +153,7 @@ def find_duplicate_marriages(list_fam):
                 unique_marriages.append(i)       
     return duplicate_marriages
 
+
 # US07: Function to check age is less than 150 years
 def less_than_150years(list_indi):
     for i in list_indi:
@@ -202,14 +163,54 @@ def less_than_150years(list_indi):
            print("For ", i[0], i[1],", the age is less than 150 years.")
     return
     
-# # US11: Function to for no biogamy
-# def no_biogamy(list_fam):
     
+# Function to get the difference between dates in days    
+def get_difference(date1, date2):
+    delta = (date2) - (date1)
+    return delta.days
+
     
+# US38 : List of upcoming birthdays
+def upcoming_birthdays(list_indi):
+    upc_birthday = []
+    currentDate = (date.today().strftime("%Y-%m-%d"))
+    currentDate= currentDate.rsplit('-')
+    print(currentDate)
+    for i in list_indi:
+        birth = (parser.parse(i[3]))
+        print(birth)
+        birthday = str(birth.date())
+        birthday = birthday.rsplit('-')
+        year = birthday[0]
+        birthday = birthday[0].replace(year,currentDate[0])
+        days = get_difference(currentDate, birthday)
+        print(f'Difference is {days} days')
+        if  (0 <= days <= 30):
+            upc_birthday = upc_birthday.append(i)
+    return f'Upcoming birthdays for this year {upc_birthday}'
+
     
-    
-    
-#Function to check for deaths before and returns I
+# US39 : List of upcoming anniversaries
+def upcoming_anniversaries(list_fam):
+    upc_anniversaries = []
+    currentDate = (date.today().strftime("%Y-%m-%d"))
+    currentDate= currentDate.rsplit('-')
+    print(currentDate)
+    for i in list_fam:
+        marriage = (parser.parse(i[3]))
+        print(marriage)
+        marriage_date = str(marriage.date())
+        marriage_date = (marriage_date).rsplit('-')
+        year = marriage_date[0]
+        marraige_date = marriage_date[0].replace(year,currentDate[0])
+        days = get_difference(currentDate, marriage_date)
+        print(f'Difference is {days} days')
+        if  (0 <= days <= 30):
+            upc_anniversaries = upc_anniversaries.append(i)
+    return f'Upcoming birthdays for this year {upc_anniversaries}'
+ 
+   
+# Function to check for deaths before and returns I
 def _birth_before_death(list_indi):
     errors = []
     no_errors = []
@@ -237,27 +238,6 @@ def _birth_before_death(list_indi):
     #     else:
     #         return print("ERROR: Birth date ", getNameByID(list_indi, i[0]) ," is'NA'.")
     return no_errors
-
-# # US 31: List of People Who have never been amried and are over 30
-def single(list_indi):
-    result = []
-    for i in list_indi:
-        if (i[7]>=30):
-            if(i[5]==""):
-                result = result + [i[1]]
-    return result
-
-# # US 32: 
-def mul_Briths(list_indi):
-    result = []
-    for i in list_indi:
-        for a in list_indi:
-            if (i[1]!=a[1]):
-                if (i[3]==a[3]):
-                    result = result + [i[3]]
-    return result
-
-
 
 class Individual:
     def __init__(self, i_id):
@@ -406,6 +386,25 @@ def process_family(lines, index, new_family):
 def format_date(input_date):
     return datetime.strftime(input_date, '%d %b %Y')
 
+
+# US11: Function to for no biogamy
+def no_biogamy(list_fam):
+    no_biogamy = []
+    biogamy = []
+    temp  = [list_fam]
+    for i in list_fam:
+        for j in temp[0:]:
+            if ((i[1] == j[1]) and (i[2] == j[2])) :
+                print(i[1]," and ",i[2], ",their marriage is a biogamy.")
+                biogamy.append(i)
+                if (i[3] == j[3]):
+                    print(getNameByID(list_indi, i[0]),getNameByID(list_indi, j[2]), "their marriage is a biogamy.")    
+                    biogamy.append(i)
+            else:
+                no_biogamy.append(i)       
+    return biogamy
+
+
 # US10: Marriage After 14
 def marriage_after_fourteen():  
     proper_marriage = True
@@ -541,24 +540,6 @@ def list_deceased(list_table):  # US29: List Deceased
 
     list_table.append(
         ["US29", "List Deceased", "", True, results])
-#  # US 41 and 42
-def check_date(raw):
-    daysMon= [31,29,31,30,31,30,31,31,30,31,30,31]
-    months = ["Jan","FED","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"]
-    if(raw[2]<=31 and raw[3] in months and raw[4] >= 1000):
-        count = 0
-        for i in months:
-            if(raw[3]== i):
-                if (raw[2]<=daysMon[count]):
-                    break
-                else:
-                    return raw[4] + " " + raw[3] + " " + daysMon[count] 
-        return raw[4] + " " + raw[3] + " " + raw[2]
-    if( raw[2] in months and raw[3] >= 1000):
-        return raw[3] + " " + raw[2]
-    else:
-        return raw[2]
-
 
 #Function for storing data in list_indi, list_fam
 def parse(file_name):
@@ -663,11 +644,6 @@ print(tabulate(myData, headers=head, tablefmt="grid"))
     
 #Printing family's unique identifier, family member's names with their individual unique IDs
 for i in list_fam:
-    print("Family's unique ID: "+i[0]+
-          "\nHusband's Name: "+getNameByID(list_indi,i[1])+", Individual unique ID:",i[1]+
-          "\nWife's Name: "+getNameByID(list_indi,i[2])+", Individual unique ID:",i[2]+"\n")
-for i in list_fam:
-    print("Do all males in family " +i[0]+" have the same last name "+(str)(male_lastName(list_indi,i)))
     print("Family's unique ID: ", i[0],
           "\nHusband's Name: " , getNameByID(list_indi,i[1])  , ", Individual unique ID:",i[1],
           "\nWife's Name: ",getNameByID(list_indi,i[2]),", Individual unique ID:",i[2],"\n")
